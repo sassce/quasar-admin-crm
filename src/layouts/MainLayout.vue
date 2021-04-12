@@ -298,11 +298,14 @@ function parseMembers() {
   axios
     .get(linkGetIdList)
     .then((res) => {
-      let members = res.data;
-      console.log(members);
-      return members.map((country) => {
+      let countries = res.data;
+      console.log(countries);
+      return countries.map((country) => {
         return {
-          label: "sss",
+          label: country,
+          sublabel: getRandomSecondLabel(),
+          stamp: getRandomStamp(),
+          value: country,
         };
       });
     })
@@ -327,11 +330,14 @@ export default {
     },
     search(terms, done) {
       setTimeout(() => {
-        done(filter(terms, { field: "value", list: parseMembers() }));
+        done(filter(terms, { field: "value", list: parseCountries() }));
       }, 1000);
     },
     selected(item) {
       this.$q.notify(`Selected suggestion "${item.label}"`);
+    },
+    duplicate(label) {
+      this.$q.notify(`"${label}" already in list`);
     },
   },
 };
