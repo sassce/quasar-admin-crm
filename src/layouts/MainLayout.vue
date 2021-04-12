@@ -48,8 +48,14 @@
             </q-card-section>
 
             <q-card-section class="q-pt-none">
-              <input type="search" inverted v-model="terms" placeholder="Start typing a country name" />
+              <q-chips-input
+                v-model="chips1"
+                placeholder="Select from list or add new one"
+                stack-label="List of countries"
+                @duplicate="duplicate"
+              >
                 <q-autocomplete @search="search" @selected="selected" />
+              </q-chips-input>
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
