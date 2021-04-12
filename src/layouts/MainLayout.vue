@@ -301,41 +301,31 @@
 
 <script>
 import axios from "axios";
-const stringOptions = [
-  'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
-]
 
-function parseCountries() {
-  let linkGetIdList = "http://admin-api.org/api/TypeAheadMembers/12345/kra";
-
-  axios
-    .get(linkGetIdList)
-    .then((res) => {
-      let countries = res.data;
-      console.log(countries);
-      return countries.map((country) => {
-        return {
-          label: country,
-          // sublabel: getRandomSecondLabel(),
-          // stamp: getRandomStamp(),
-          value: country,
-        };
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
 export default {
   data() {
     return {
+      stringOptions: [],
       terms: "",
       left: false,
       prompt: false,
       address: "",
        model: null,
-      options: stringOptions
+      options: []
     };
+  },
+  mounted() {
+    let linkGetIdList = 'http://admin-api.org/api/TypeAheadMembers/12345/kra'
+
+
+    axios.get(linkGetIdList)
+    .then(res => {
+    this.stringOptions = res.data
+    console.log(res.data)
+    })
+    .catch(err => {
+    console.log(err)
+    } )
   },
   methods: {
     logoutNotify() {
@@ -351,7 +341,8 @@ export default {
 
       update(() => {
         const needle = val.toLowerCase()
-        this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        // console.log(this.stringOptions)
+        // this.options = stringOptions.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
       })
     }
   },
