@@ -47,16 +47,26 @@
               <div class="text-h6">Your address</div>
             </q-card-section>
 
-            <q-card-section class="q-pt-none">
-              <q-chips-input
-                v-model="chips1"
-                placeholder="Select from list or add new one"
-                stack-label="List of countries"
-                @duplicate="duplicate"
-              >
-                <q-autocomplete @search="search" @selected="selected" />
-              </q-chips-input>
-            </q-card-section>
+            <q-select
+              filled
+              v-model="model"
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="0"
+              :options="options"
+              @filter="filterFn"
+              hint="Minimum 3 characters to trigger filtering"
+              style="width: 250px; padding-bottom: 32px"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
 
             <q-card-actions align="right" class="text-primary">
               <q-btn flat label="Cancel" v-close-popup />
@@ -291,8 +301,11 @@
 
 <script>
 import axios from "axios";
+const stringOptions = [
+  'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
+]
 
-function parseMembers() {
+function parseCountries() {
   let linkGetIdList = "http://admin-api.org/api/TypeAheadMembers/12345/kra";
 
   axios
@@ -303,8 +316,8 @@ function parseMembers() {
       return countries.map((country) => {
         return {
           label: country,
-          sublabel: getRandomSecondLabel(),
-          stamp: getRandomStamp(),
+          // sublabel: getRandomSecondLabel(),
+          // stamp: getRandomStamp(),
           value: country,
         };
       });
@@ -320,6 +333,8 @@ export default {
       left: false,
       prompt: false,
       address: "",
+       model: null,
+      options: stringOptions
     };
   },
   methods: {
@@ -328,17 +343,17 @@ export default {
         message: "Logged out",
       });
     },
-    search(terms, done) {
-      setTimeout(() => {
-        done(filter(terms, { field: "value", list: parseCountries() }));
-      }, 1000);
-    },
-    selected(item) {
-      this.$q.notify(`Selected suggestion "${item.label}"`);
-    },
-    duplicate(label) {
-      this.$q.notify(`"${label}" already in list`);
-    },
+    filterFn (val, update, abort) {
+      if (val.length < 3) {
+        abort()
+        return
+      }
+
+      update(() => {
+        const needle = val.toLowerCase()
+        this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+      })
+    }
   },
 };
 </script>

@@ -43,9 +43,15 @@ module.exports = function (ctx) {
       //            (fastest compile time; minimum bundle size; most tedious)
       // * true   - Import everything from Quasar
       //            (not treeshaking Quasar; biggest bundle size; convenient)
-      all: 'auto',
+      all: true,
 
-      components: [],
+      // components: ['QChipsInput','QAutocomplete'],
+      // components: ['QChipsInput'],
+      // components: ['QBtn', 'QIcon'],
+      // components: ['QInput'],
+      // components: ['QSelect'],
+      // components: ['QColorPicker'],
+
       directives: [],
 
       // Quasar plugins
